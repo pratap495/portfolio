@@ -120,10 +120,53 @@ function App() {
       })
     }, { threshold: 0.12 })
     elements.forEach(element => observer.observe(element))
-    return () => observer.disconnect()
+    const root = document.documentElement
+    const updatePointer = event => {
+      root.style.setProperty('--mouse-x', `${event.clientX}px`)
+      root.style.setProperty('--mouse-y', `${event.clientY}px`)
+      root.style.setProperty('--parallax-x', `${(event.clientX / window.innerWidth - .5) * 12}px`)
+      root.style.setProperty('--parallax-y', `${(event.clientY / window.innerHeight - .5) * 8}px`)
+    }
+    const updateProgress = () => {
+      const available = document.documentElement.scrollHeight - window.innerHeight
+      root.style.setProperty('--scroll-progress', `${available > 0 ? (window.scrollY / available) * 100 : 0}%`)
+    }
+    const tiltCards = document.querySelectorAll('[data-tilt]')
+    const tiltHandlers = [...tiltCards].map(card => {
+      const move = event => {
+        const box = card.getBoundingClientRect()
+        const x = (event.clientX - box.left) / box.width - .5
+        const y = (event.clientY - box.top) / box.height - .5
+        card.style.setProperty('--tilt-x', `${-y * 7}deg`)
+        card.style.setProperty('--tilt-y', `${x * 8}deg`)
+        card.style.setProperty('--shine-x', `${(x + .5) * 100}%`)
+        card.style.setProperty('--shine-y', `${(y + .5) * 100}%`)
+      }
+      const reset = () => {
+        card.style.setProperty('--tilt-x', '0deg')
+        card.style.setProperty('--tilt-y', '0deg')
+      }
+      card.addEventListener('pointermove', move)
+      card.addEventListener('pointerleave', reset)
+      return { card, move, reset }
+    })
+    window.addEventListener('pointermove', updatePointer, { passive: true })
+    window.addEventListener('scroll', updateProgress, { passive: true })
+    updateProgress()
+    return () => {
+      observer.disconnect()
+      window.removeEventListener('pointermove', updatePointer)
+      window.removeEventListener('scroll', updateProgress)
+      tiltHandlers.forEach(({ card, move, reset }) => {
+        card.removeEventListener('pointermove', move)
+        card.removeEventListener('pointerleave', reset)
+      })
+    }
   }, [])
 
   return <div className="site">
+    <div className="scroll-progress" />
+    <div className="cursor-glow" />
     <div className="stars" />
     <Header />
     <main>
@@ -157,7 +200,7 @@ function App() {
 
       <section id="skills" data-reveal>
         <div className="section-title"><span/><i/>WHAT I BUILD<i/><span/></div>
-        <div className="service-grid">{services.map(({icon:Icon,title,copy,color})=><article key={title} className={color}><div className="service-icon"><Icon /></div><div><h4>{title}</h4><p>{copy}</p><ChevronRight /></div></article>)}</div>
+        <div className="service-grid">{services.map(({icon:Icon,title,copy,color})=><article key={title} className={color} data-tilt><div className="service-icon"><Icon /></div><div><h4>{title}</h4><p>{copy}</p><ChevronRight /></div></article>)}</div>
       </section>
 
       <section className="freelance" id="journey" data-reveal>
@@ -169,7 +212,7 @@ function App() {
         </div>
         <div className="client-work">
           <div className="client-heading"><span>SELECTED CLIENT WORK</span><i>{freelanceProjects.length}+ PROJECTS</i></div>
-          <div className="logo-grid">{freelanceProjects.map(project => <article key={project.name}>
+          <div className="logo-grid">{freelanceProjects.map(project => <article key={project.name} data-tilt>
             <div className="logo-wrap"><img src={project.logo} alt={`${project.name} logo`} /></div>
             <div><b>{project.name}</b><span>{project.type}</span></div>
           </article>)}</div>

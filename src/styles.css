@@ -64,3 +64,25 @@ main{max-width:1170px;margin:auto;padding:0 20px;position:relative;z-index:2}.he
 @keyframes progressGrow{from{width:0}to{width:65%}}
 @keyframes badgeGlow{0%,100%{box-shadow:0 0 5px rgba(255,207,51,.08)}50%{box-shadow:0 0 18px rgba(255,207,51,.28)}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.header,.hero-content>*,.hero-art,.stars,.future .cube,.future h3,.satisfaction>i,.next-project.revealed .progress i{animation:none!important}[data-reveal]{opacity:1;transform:none;transition:none}.service-grid article,.logo-grid article,.contact-links a,.primary,.build-link,.case{transition:none}}
+
+/* Advanced interactive motion */
+.scroll-progress{position:fixed;z-index:100;left:0;top:0;height:2px;width:var(--scroll-progress,0%);background:linear-gradient(90deg,#00e7ef,#268cff,#a443ff);box-shadow:0 0 12px #268cff;pointer-events:none}
+.cursor-glow{position:fixed;z-index:1;left:var(--mouse-x,-200px);top:var(--mouse-y,-200px);width:430px;height:430px;border-radius:50%;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(30,122,255,.085),rgba(111,43,220,.035) 42%,transparent 70%);pointer-events:none;will-change:left,top}
+.hero-art{animation:advancedArtFloat 7s ease-in-out infinite alternate;will-change:transform}
+[data-tilt]{--tilt-x:0deg;--tilt-y:0deg;--shine-x:50%;--shine-y:50%;transform:perspective(800px) rotateX(var(--tilt-x)) rotateY(var(--tilt-y));transform-style:preserve-3d;will-change:transform}
+[data-tilt]:hover{transform:perspective(800px) rotateX(var(--tilt-x)) rotateY(var(--tilt-y)) translateY(-4px)!important;box-shadow:0 15px 30px rgba(0,69,145,.2)}
+[data-tilt]:before{content:"";position:absolute;inset:0;border-radius:inherit;background:radial-gradient(circle at var(--shine-x) var(--shine-y),rgba(87,164,255,.13),transparent 38%);opacity:0;transition:opacity .25s;pointer-events:none;z-index:2}[data-tilt]:hover:before{opacity:1}
+.service-grid article>* ,.logo-grid article>*{transform:translateZ(18px)}
+.project:after,.freelance:after,.contact:after{content:"";position:absolute;left:-45%;top:0;width:35%;height:1px;background:linear-gradient(90deg,transparent,#4ca7ff,#a94dff,transparent);animation:borderScan 5.5s ease-in-out infinite;pointer-events:none;z-index:4}
+.freelance:after{animation-delay:1.2s}.contact:after{animation-delay:2.4s}
+.primary{position:relative;overflow:hidden}.primary:after{content:"";position:absolute;inset:-2px auto -2px -45%;width:35%;transform:skewX(-18deg);background:linear-gradient(90deg,transparent,rgba(255,255,255,.32),transparent);animation:buttonShine 3.8s ease-in-out infinite}
+.revealed .service-grid article,.revealed .logo-grid article{animation:cardEnter .65s both}.revealed .service-grid article:nth-child(2),.revealed .logo-grid article:nth-child(2){animation-delay:.1s}.revealed .service-grid article:nth-child(3),.revealed .logo-grid article:nth-child(3){animation-delay:.2s}.revealed .service-grid article:nth-child(4),.revealed .logo-grid article:nth-child(4){animation-delay:.3s}.revealed .logo-grid article:nth-child(5){animation-delay:.4s}
+.terminal:after{animation:terminalCursor 1s steps(1) infinite}.brand svg{filter:drop-shadow(0 0 5px rgba(69,158,255,.45));animation:logoSignal 2.8s ease-in-out infinite}
+@keyframes advancedArtFloat{from{transform:translate3d(var(--parallax-x,0),var(--parallax-y,0),0)}to{transform:translate3d(calc(var(--parallax-x,0px) + 7px),calc(var(--parallax-y,0px) - 6px),0)}}
+@keyframes borderScan{0%,15%{left:-45%;opacity:0}35%,65%{opacity:1}85%,100%{left:110%;opacity:0}}
+@keyframes buttonShine{0%,62%{left:-45%}88%,100%{left:125%}}
+@keyframes cardEnter{from{opacity:0;transform:perspective(800px) translateY(22px) scale(.97)}to{opacity:1;transform:perspective(800px) translateY(0) scale(1)}}
+@keyframes terminalCursor{0%,48%{opacity:1}49%,100%{opacity:0}}
+@keyframes logoSignal{0%,100%{filter:drop-shadow(0 0 4px rgba(69,158,255,.35))}50%{filter:drop-shadow(0 0 10px rgba(69,158,255,.85))}}
+@media(max-width:760px),(pointer:coarse){.cursor-glow{display:none}[data-tilt],[data-tilt]:hover{transform:none!important}.hero-art{animation:artFloat 7s ease-in-out infinite alternate}}
+@media(prefers-reduced-motion:reduce){.scroll-progress{transition:none}.cursor-glow{display:none}.project:after,.freelance:after,.contact:after,.primary:after,.brand svg,.revealed .service-grid article,.revealed .logo-grid article{animation:none!important}[data-tilt],[data-tilt]:hover{transform:none!important}}
