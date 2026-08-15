@@ -25,11 +25,11 @@ const services = [
   { icon: Cloud, title: 'Cloud & DevOps', copy: 'Scalable cloud infrastructure and CI/CD automation.', color: 'blue' },
 ]
 const freelanceProjects = [
-  { name: 'CarsBuddy', logo: '/client-logos/carsbuddy.png', type: 'Automotive Platform' },
-  { name: 'Concept', logo: '/client-logos/concept.png', type: 'Business Website' },
-  { name: 'Rio Advertising', logo: '/client-logos/rio-ad.png', type: 'Digital Experience' },
-  { name: "Tahiby's", logo: '/client-logos/tahiby.png', type: 'Restaurant Platform' },
-  { name: 'HiRight', logo: '/client-logos/hiright/public/assets/hi-right-logo.jpg', type: 'Corporate Services' },
+  { name: 'CarsBuddy', logo: '/client-logos/carsbuddy.png', type: 'Automotive Platform', url: 'https://carsbuddy.net/' },
+  { name: 'Concept', logo: '/client-logos/concept.png', type: 'Business Website', url: 'https://www.conceptphotography.co.in/' },
+  { name: 'Rio Advertising', logo: '/client-logos/rio-ad.png', type: 'Digital Experience', url: 'https://rioadagency.com/' },
+  { name: "Tahiby's", logo: '/client-logos/tahiby.png', type: 'Restaurant Platform', url: 'https://tahibys.com/' },
+  { name: 'HiRight', logo: '/client-logos/hiright/public/assets/hi-right-logo.jpg', type: 'Corporate Services', url: 'https://hiright.in/' },
 ]
 
 function Header() {
@@ -212,10 +212,10 @@ function App() {
         </div>
         <div className="client-work">
           <div className="client-heading"><span>SELECTED CLIENT WORK</span><i>{freelanceProjects.length}+ PROJECTS</i></div>
-          <div className="logo-grid">{freelanceProjects.map(project => <article key={project.name} data-tilt>
+          <div className="logo-grid">{freelanceProjects.map(project => <a key={project.name} className="client-card" href={project.url} target="_blank" rel="noopener noreferrer" data-tilt aria-label={`Visit ${project.name}`}>
             <div className="logo-wrap"><img src={project.logo} alt={`${project.name} logo`} /></div>
             <div><b>{project.name}</b><span>{project.type}</span></div>
-          </article>)}</div>
+          </a>)}</div>
         </div>
       </section>
 
